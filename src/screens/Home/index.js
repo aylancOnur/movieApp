@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Button, FlatList, Text, View} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {FlatList, View, Animated} from 'react-native';
 
 import {connect} from 'react-redux';
 
 import {requestAllMovies} from '../../redux/actions';
+
+import {MovieCard, SearchBar} from '../../components';
 
 import styles from './styles';
 
@@ -15,46 +17,42 @@ const mapDispatchToProps = dispatch => {
   return {dispatch};
 };
 
-const Item = ({title}) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
-
 const Home = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(props => {
   const {app, dispatch} = props;
 
-  const [page, setPage] = useState(null);
+  const [page, setPage] = useState(1);
 
-  console.log('MOVIES =>', app);
+  // console.log('MOVIES =>', app.movies.list);
   console.log('STATE =>', page);
 
   useEffect(() => {
     dispatch(requestAllMovies(page));
   }, [dispatch, page]);
 
-  const renderItem = ({item}) => <Item title={item.title} />;
-
   const handlePagination = () => {
-    setPage(prevPage => prevPage + 1);
+    setPage(page + 1);
   };
 
   return (
     <View style={styles.container}>
-      {app.loading ? (
+      <SearchBar navigation={props.navigation} />
+      {/* {app.loading ? (
         <Text>Loading...</Text>
-      ) : (
-        <FlatList
-          data={app.movies}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          // onEndReached={handlePagination}
-        />
-      )}
-      <Button title="Page" onPress={handlePagination} />
+      ) : ( */}
+      <FlatList
+        data={app.movies.list}
+        renderItem={({item}) => {
+          return <MovieCard movie={item} navigation={props.navigation} />;
+        }}
+        keyExtractor={item => item.id}
+        onEndReached={handlePagination}
+        numColumns={2}
+      />
+      {/* )} */}
+      {/* <Button title="Page" onPress={handlePagination} /> */}
     </View>
   );
 });

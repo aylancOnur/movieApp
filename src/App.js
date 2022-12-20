@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 
 import {Navigation} from './navigation';
 
@@ -11,11 +11,11 @@ import styles from './styles';
 
 const App = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Provider store={store}>
         <Navigation />
       </Provider>
-    </View>
+    </SafeAreaView>
   );
 };
 

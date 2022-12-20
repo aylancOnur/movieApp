@@ -14,11 +14,7 @@ const MainStack = () => {
         name="Home"
         component={Home}
       />
-      <Stack.Screen
-        options={{headerShown: false}}
-        name="Detail"
-        component={Detail}
-      />
+      <Stack.Screen name="MovieDetail" component={Detail} />
     </Stack.Navigator>
   );
 };
