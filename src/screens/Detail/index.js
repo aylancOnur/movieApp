@@ -27,7 +27,7 @@ const Detail = connect(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieId]);
 
-  console.log('MOVIE DETAIL', app.movie);
+  // console.log('MOVIE DETAIL', app.movie);
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <MaterialCommunityIcons style={{marginRight: 5}} name="movie" size={30} />

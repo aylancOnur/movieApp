@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import Colors from '../../utils/color';
-import {H, W} from '../../utils/ui/dimensions';
+import {W} from '../../utils/ui/dimensions';
 
 const styles = StyleSheet.create({
   card: {

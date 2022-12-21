@@ -1,11 +1,11 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {FlatList, View, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, View, RefreshControl, Platform} from 'react-native';
 
 import {connect} from 'react-redux';
 
-import {requestAllMovies} from '../../redux/actions';
+import {requestAllMovies, pullToRefresh} from '../../redux/actions';
 
-import {MovieCard, SearchBar} from '../../components';
+import {Loading, MovieCard, SearchBar} from '../../components';
 
 import styles from './styles';
 
@@ -25,35 +25,41 @@ const Home = connect(
 
   const [page, setPage] = useState(1);
 
-  // console.log('MOVIES =>', app.movies.list);
-  console.log('STATE =>', page);
+  const handlePagination = () => {
+    setPage(page + 1);
+  };
+
+  const onRefresh = () => {
+    dispatch(pullToRefresh(1));
+  };
 
   useEffect(() => {
     dispatch(requestAllMovies(page));
   }, [dispatch, page]);
 
-  const handlePagination = () => {
-    setPage(page + 1);
-  };
-
   return (
-    <View style={styles.container}>
-      <SearchBar navigation={props.navigation} />
-      {/* {app.loading ? (
-        <Text>Loading...</Text>
-      ) : ( */}
-      <FlatList
-        data={app.movies.list}
-        renderItem={({item}) => {
-          return <MovieCard movie={item} navigation={props.navigation} />;
-        }}
-        keyExtractor={item => item.id}
-        onEndReached={handlePagination}
-        numColumns={2}
-      />
-      {/* )} */}
-      {/* <Button title="Page" onPress={handlePagination} /> */}
-    </View>
+    <>
+      <View style={Platform.OS === 'ios' ? styles.searchContainer : null}>
+        <SearchBar navigation={props.navigation} />
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          data={app.movies}
+          renderItem={({item}) => {
+            return <MovieCard movie={item} navigation={props.navigation} />;
+          }}
+          keyExtractor={item => item.id}
+          onEndReached={handlePagination}
+          numColumns={2}
+          refreshControl={
+            <RefreshControl refreshing={app.loading} onRefresh={onRefresh} />
+          }
+          scrollEnabled={app.loading ? false : true}
+          ListFooterComponent={() => <Loading />}
+          initialNumToRender={20}
+        />
+      </View>
+    </>
   );
 });
 

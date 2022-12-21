@@ -6,6 +6,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: W(2),
   },
+  searchContainer: {
+    zIndex: 9,
+  },
 });
 
 export default styles;

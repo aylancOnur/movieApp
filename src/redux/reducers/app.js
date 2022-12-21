@@ -3,12 +3,9 @@ import * as constants from '../constants';
 const initialState = {
   loading: false,
 
-  movies: {
-    list: [],
-    limit: 0,
-    total: 0,
-    skip: 0,
-  },
+  searchLoading: false,
+
+  movies: [],
 
   searchMovies: [],
 
@@ -21,12 +18,14 @@ export const app = (state = initialState, {type, payload, key, value}) => {
       return {...state, [key]: value};
     }
 
+    case constants.SET_SEARCH_LOADING: {
+      return {...state, [key]: value};
+    }
+
     case constants.REQUEST_GET_ALL_MOVIES: {
       return {
         ...state,
-        movies: {
-          list: [...state.movies.list, ...payload.results],
-        },
+        movies: [...state.movies, ...payload.results],
       };
     }
 
@@ -38,9 +37,30 @@ export const app = (state = initialState, {type, payload, key, value}) => {
     }
 
     case constants.REQUEST_GET_SEARCH_MOVIES: {
+      if (payload.isPagination) {
+        return {
+          ...state,
+          searchMovies: [...state.searchMovies, ...payload.data.results],
+        };
+      } else {
+        return {
+          ...state,
+          searchMovies: payload.data.results,
+        };
+      }
+    }
+
+    case constants.REQUEST_CLEAR_SEARCH_MOVIES: {
       return {
         ...state,
-        searchMovies: payload.results,
+        searchMovies: [],
+      };
+    }
+
+    case constants.PULL_TO_REFRESH: {
+      return {
+        ...state,
+        movies: [],
       };
     }
 

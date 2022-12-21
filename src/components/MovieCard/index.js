@@ -1,15 +1,9 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-
-import {connect} from 'react-redux';
 
 import styles from './styles';
 
-const mapDispatchToProps = dispatch => ({dispatch});
-
-const MovieCard = connect(mapDispatchToProps)(props => {
-  const {dispatch} = props;
-
+const MovieCard = props => {
   return (
     <TouchableOpacity
       style={styles.card}
@@ -34,6 +28,6 @@ const MovieCard = connect(mapDispatchToProps)(props => {
       </View>
     </TouchableOpacity>
   );
-});
+};
 
-export {MovieCard};
+export default memo(MovieCard);
